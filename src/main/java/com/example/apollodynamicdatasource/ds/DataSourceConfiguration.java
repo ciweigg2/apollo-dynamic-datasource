@@ -23,8 +23,6 @@ import java.util.Set;
 @Slf4j
 public class DataSourceConfiguration {
 
-	private final static String DATASOURCE_TAG = "db";
-
 	@Autowired
 	private ApplicationContext context;
 
@@ -90,17 +88,6 @@ public class DataSourceConfiguration {
 		});
 		source.setTargetDataSources(dataSourceHashtable);
 		source.afterPropertiesSet();
-	}
-
-	/**
-	 * 监听配置变化 使用的数据库 上下文设置
-	 *
-	 * @param changeEvent
-	 */
-	@ApolloConfigChangeListener
-	public void onChangeUseDataSources(ConfigChangeEvent changeEvent) {
-		DynamicDataSourceContextHolder.setDataSourceKey(useDataSources);
-		log.info("数据库切换为：{}", config.getProperty(useDataSources, ""));
 	}
 
 	/**
