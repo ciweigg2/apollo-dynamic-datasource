@@ -1,4 +1,4 @@
-package com.example.apollodynamicdatasource.dynamicDataSource;
+package com.example.apollodynamicdatasource.dynamicDataSource.properties;
 
 import lombok.Data;
 import org.springframework.boot.jdbc.DataSourceInitializationMode;

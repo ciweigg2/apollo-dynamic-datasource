@@ -1,7 +1,7 @@
 package com.example.apollodynamicdatasource.mapper;
 
-import com.example.apollodynamicdatasource.entity.User;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.example.apollodynamicdatasource.entity.User;
 
 /**
  * <p>

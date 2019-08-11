@@ -1,11 +1,15 @@
-package com.example.apollodynamicdatasource.ds;
+package com.example.apollodynamicdatasource.dynamicDataSource;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ctrip.framework.apollo.Config;
+import com.ctrip.framework.apollo.enums.PropertyChangeType;
+import com.ctrip.framework.apollo.model.ConfigChange;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;
 import com.ctrip.framework.apollo.spring.annotation.ApolloConfig;
 import com.ctrip.framework.apollo.spring.annotation.ApolloConfigChangeListener;
-import com.example.apollodynamicdatasource.dynamicDataSource.DynamicDataSourceProperties;
+import com.example.apollodynamicdatasource.dynamicDataSource.context.DynamicDataSourceContextHolder;
+import com.example.apollodynamicdatasource.dynamicDataSource.properties.DynamicDataSourceProperties;
+import com.example.apollodynamicdatasource.dynamicDataSource.util.DataSourceTerminationTask;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,13 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import javax.sql.DataSource;
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * 动态数据源核心操作类
+ */
 @Configuration
 @Slf4j
 public class DataSourceConfiguration {
@@ -33,6 +43,8 @@ public class DataSourceConfiguration {
 
 	@Value("${useDataSources}")
 	private String useDataSources;
+
+	private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
 	/**
 	 * 动态数据源
@@ -53,23 +65,7 @@ public class DataSourceConfiguration {
 		});
 		//设置动态数据源
 		source.setTargetDataSources(dataSourceHashtable);
-		//设置默认数据源 如果配置中心没有配置数据源 则会使用默认的数据源
-//		source.setDefaultTargetDataSource(setDefaultDataSource());
 		return source;
-	}
-
-	/**
-	 * 设置默认数据源
-	 *
-	 * @return DataSource
-	 */
-	public DataSource setDefaultDataSource() {
-		HikariDataSource dataSource = new HikariDataSource();
-		dataSource.setJdbcUrl(config.getProperty("spring.datasource.url", "jdbc:mysql://115.220.10.37:3309/test3?autoReconnect=true&useUnicode=true&characterEncoding=utf-8"));
-		dataSource.setUsername(config.getProperty("spring.datasource.username", "root"));
-		dataSource.setPassword(config.getProperty("spring.datasource.password", "123456"));
-		dataSource.setMaximumPoolSize(config.getIntProperty("spring.datasource.hikari.maximumPoolSize", 5));
-		return dataSource;
 	}
 
 	/**
@@ -82,16 +78,44 @@ public class DataSourceConfiguration {
 		Set<String> changedKeys = changeEvent.changedKeys();
 		DynamicDataSource source = context.getBean(DynamicDataSource.class);
 		changedKeys.forEach(key -> {
-			//获取所有数据库配置的属性
-			String keys = changeEvent.getChange(key).getNewValue();
-			dataSourceHashtable.put(key, dataSource(keys));
+			//获取所有数据库配置的属性 根据配置的变化状态ADDED MODIFIED DELETED增删改数据源
+			ConfigChange configChange = changeEvent.getChange(key);
+			String values = configChange.getNewValue();
+			if(configChange.getChangeType().equals(PropertyChangeType.ADDED) || configChange.getChangeType().equals(PropertyChangeType.MODIFIED)){
+				//新增和删除都往map中做put操作
+				dataSourceHashtable.put(key, dataSource(values));
+			}
+			if (configChange.getChangeType().equals(PropertyChangeType.DELETED)){
+				//删除数据源并关闭数据连接池
+				HikariDataSource hikariDataSource = (HikariDataSource) dataSourceHashtable.get(key);
+				if(!hikariDataSource.isClosed()){
+					//关闭连接池 可能连接池还有用户在使用 所以需要异步尝试关闭保证数据的正确性
+					if(hikariDataSource.getHikariPoolMXBean() != null){
+						log.warn("当前数据源之前在使用中 需要尝试关闭");
+						asyncTerminate(hikariDataSource);
+					}else {
+						log.warn("当前数据源并未使用 无需尝试关闭");
+					}
+				}
+				dataSourceHashtable.remove(key);
+			}
 		});
 		source.setTargetDataSources(dataSourceHashtable);
 		source.afterPropertiesSet();
 	}
 
 	/**
-	 * 创建新数据源
+	 * 异步线程等待活动链接为0关闭数据源
+	 *
+	 * @param dataSource 数据源
+	 */
+	private void asyncTerminate(DataSource dataSource) {
+		DataSourceTerminationTask task = new DataSourceTerminationTask(dataSource, scheduledExecutorService);
+		scheduledExecutorService.schedule(task, 0, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * 创建新数据源 这边根据规则来就行了 我这边配置的规则是key包含db然后格式是json的都是数据库的
 	 *
 	 * @return DataSource
 	 */
@@ -111,7 +135,7 @@ public class DataSourceConfiguration {
 
 	/**
 	 * 选择对应的数据源
-	 * 每次执行mybatis的时候都会经过这边的
+	 * 每次执行mybatis的时候都会经过这边的 但是配置了事务会失效
 	 * 所以可以根据需求选择对应的数据源
 	 */
 	public class DynamicDataSource extends AbstractRoutingDataSource {

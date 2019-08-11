@@ -3,6 +3,8 @@ package com.example.apollodynamicdatasource.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.apollodynamicdatasource.entity.User;
 import com.example.apollodynamicdatasource.mapper.UserMapper;
+import com.example.apollodynamicdatasource.service.dynamic.UserDynamic2Service;
+import com.example.apollodynamicdatasource.service.dynamic.UserDynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,21 +20,27 @@ import java.util.List;
  * @desc
  */
 @RestController
-public class TestController<T> {
+public class TestController {
 
 	@Autowired
 	private UserMapper userMapper;
 
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private JdbcTemplate primaryJdbcTemplate;
+
+	@Autowired
+	private UserDynamicService userDynamicService;
+
+	@Autowired
+	private UserDynamic2Service userDynamic2Service;
 
 	@RequestMapping(value = "test")
-	public <T> T test() {
+	public List<User> test() {
 		//手动切换数据 接下来在这个请求中 都会使用手动切换的数据库
 //		DynamicDataSourceContextHolder.setDataSourceKey("new-db");
-		List<User> user = jdbcTemplate.query("select * from user", new BeanPropertyRowMapper<>(User.class));
+		List<User> user = primaryJdbcTemplate.query("select * from user", new BeanPropertyRowMapper<>(User.class));
 		System.out.println(JSONObject.toJSONString(user));
-		return (T) userMapper.selectList(null);
+		return userMapper.selectList(null);
 	}
 
 }
