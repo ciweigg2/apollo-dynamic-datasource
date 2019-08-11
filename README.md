@@ -33,7 +33,7 @@ value:{ "url":"jdbc:mysql://127.0.0.1:3309/test2?autoReconnect=true&useUnicode=t
 
 动态数据源使用determineCurrentLookupKey方式在开启事务Connection之前选择数据源
 
-之后都会使用缓存中的Connection连接所以手动设置不会生效 如果要手动切换数据源做查询操作的话 要在@Transactional注解的方法前使用
+事务会使用缓存中的Connection连接所以手动设置不会生效 如果要手动切换数据源做查询操作的话 要在@Transactional注解的方法前使用
 
 但是不能新增操作 因为不受事务控制 事务只控制第一次开启Connection链接的数据源
 
