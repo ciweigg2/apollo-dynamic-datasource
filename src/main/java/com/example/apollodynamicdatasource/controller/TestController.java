@@ -3,8 +3,6 @@ package com.example.apollodynamicdatasource.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.apollodynamicdatasource.entity.User;
 import com.example.apollodynamicdatasource.mapper.UserMapper;
-import com.example.apollodynamicdatasource.service.dynamic.UserDynamic2Service;
-import com.example.apollodynamicdatasource.service.dynamic.UserDynamicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,12 +25,6 @@ public class TestController {
 
 	@Autowired
 	private JdbcTemplate primaryJdbcTemplate;
-
-	@Autowired
-	private UserDynamicService userDynamicService;
-
-	@Autowired
-	private UserDynamic2Service userDynamic2Service;
 
 	@RequestMapping(value = "test")
 	public List<User> test() {
