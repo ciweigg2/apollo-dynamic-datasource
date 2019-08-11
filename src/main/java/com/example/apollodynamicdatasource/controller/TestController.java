@@ -24,13 +24,13 @@ public class TestController {
 	private UserMapper userMapper;
 
 	@Autowired
-	private JdbcTemplate primaryJdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
 	@RequestMapping(value = "test")
 	public List<User> test() {
 		//手动切换数据 接下来在这个请求中 都会使用手动切换的数据库
 //		DynamicDataSourceContextHolder.setDataSourceKey("new-db");
-		List<User> user = primaryJdbcTemplate.query("select * from user", new BeanPropertyRowMapper<>(User.class));
+		List<User> user = jdbcTemplate.query("select * from user", new BeanPropertyRowMapper<>(User.class));
 		System.out.println(JSONObject.toJSONString(user));
 		return userMapper.selectList(null);
 	}
