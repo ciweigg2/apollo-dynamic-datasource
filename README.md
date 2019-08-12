@@ -38,3 +38,9 @@ value:{ "url":"jdbc:mysql://127.0.0.1:3309/test2?autoReconnect=true&useUnicode=t
 但是不能新增操作 因为不受事务控制 事务只控制第一次开启Connection链接的数据源
 
 @Transactional注解配合动态数据源是没问题的 但是不能在该接口中手动切换数据源 这个是不生效的
+
+多数据源控制事务版本
+
+代码必须关闭自动提交 关闭自动提交会根据代码手动控制提交 回滚的话也是代码中控制
+
+dataSource.setAutoCommit(false);
