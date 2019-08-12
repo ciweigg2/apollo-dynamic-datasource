@@ -39,12 +39,13 @@ public class MpGenerator {
         GlobalConfig gc = new GlobalConfig();
         gc.setAuthor("Ciwei");
         //改成自己的项目路径
-        gc.setOutputDir("C:\\Users\\Ciwei\\Desktop\\apollo-dynamic-datasource\\src\\main\\java");
+        gc.setOutputDir("C:\\Users\\Administrator\\Desktop\\apollo-dynamic-datasource\\src\\main\\java");
         gc.setFileOverride(true);// 是否覆盖同名文件，默认是false
         gc.setActiveRecord(true);// 不需要ActiveRecord特性的请改为false
         gc.setEnableCache(false);// XML 二级缓存
         gc.setBaseResultMap(true);// XML ResultMap
         gc.setBaseColumnList(true);// XML columList
+        gc.setOpen(false);
 
         mpg.setGlobalConfig(gc);
 

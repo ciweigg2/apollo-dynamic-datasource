@@ -9,8 +9,10 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  *
  * @author Ciwei
- * @since 2019-08-08
+ * @since 2019-08-12
  */
 public interface IUserService extends IService<User> {
+
+	void insertUsers(User user) throws Exception;
 
 }

@@ -129,6 +129,8 @@ public class DataSourceConfiguration {
 			dataSource.setUsername(dynamicDataSourceProperties.getUsername());
 			dataSource.setPassword(dynamicDataSourceProperties.getPassword());
 			dataSource.setMaximumPoolSize(dynamicDataSourceProperties.getMaximumPoolSize());
+			//必须关闭自动提交否则多数据源事务失效
+//			dataSource.setAutoCommit(false);
 		}
 		return dataSource;
 	}
