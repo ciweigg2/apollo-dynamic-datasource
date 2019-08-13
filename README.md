@@ -10,6 +10,8 @@
 http://www.kailing.pub/article/index/arcid/198.html
 https://github.com/ctripcorp/apollo-use-cases/tree/master/dynamic-datasource
 https://7le.top/2018/07/28/springcloud%EF%BC%9A%E5%AE%9E%E7%8E%B0%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E4%BA%8B%E5%8A%A1/#more
+http://www.yanglajiao.com/article/gaoshili001/79378902
+https://blog.csdn.net/zchdjb/article/details/90725432
 ```
 
 ### apollo配置
