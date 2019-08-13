@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author 马秀成
  * @date 2019/8/12
  * @jdk.version 1.8
- * @desc
+ * @desc 配置sqlSessionFactory
  */
 @Configuration
 @Slf4j

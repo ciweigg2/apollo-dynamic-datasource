@@ -39,8 +39,47 @@ value:{ "url":"jdbc:mysql://127.0.0.1:3309/test2?autoReconnect=true&useUnicode=t
 
 @Transactional注解配合动态数据源是没问题的 但是不能在该接口中手动切换数据源 这个是不生效的
 
-多数据源控制事务版本
+### Mybatis 事务管理器 源码解释一波
+
+地址：https://ciweigg2.github.io/2019/08/13/jie-jue-duo-shu-ju-yuan-dong-tai-qie-huan-shi-wu-wen-ti-spring-mybatis-shi-wu-guan-li-qi-yuan-ma/
+
+> 多数据源控制事务版本
 
 代码必须关闭自动提交 关闭自动提交会根据代码手动控制提交 回滚的话也是代码中控制
 
+实现类就3个 详细介绍：
+
+sqlsessionfactory工厂类sessionFactoryBean.setTransactionFactory(new MultiDataSourceTransactionFactory());
+
+```
+CiweiSqlSessionFactory.java
+```
+
+多数据源切换的支持事务
+
+```
+MultiDataSourceTransaction
+```
+
+支持Service内多数据源切换的Factory
+
+```
+MultiDataSourceTransactionFactory
+```
+
+配置数据源
+
+```
+数据源配置关闭自动提交
 dataSource.setAutoCommit(false);
+```
+
+添加事务注解
+
+```
+配合事务注解
+@EnableTransactionManagement
+@Transactional(propagation = Propagation.REQUIRED ,rollbackFor = Exception.class)
+```
+
+源码配置实战：https://ciweigg2.github.io/2019/08/13/jie-jue-duo-shu-ju-yuan-dong-tai-qie-huan-shi-wu-wen-ti-dai-ma-shi-zhan-jie-he-mybatis-plus/

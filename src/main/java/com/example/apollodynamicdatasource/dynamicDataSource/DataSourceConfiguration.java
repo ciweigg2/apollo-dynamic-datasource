@@ -78,26 +78,35 @@ public class DataSourceConfiguration {
 		Set<String> changedKeys = changeEvent.changedKeys();
 		DynamicDataSource source = context.getBean(DynamicDataSource.class);
 		changedKeys.forEach(key -> {
-			//获取所有数据库配置的属性 根据配置的变化状态ADDED MODIFIED DELETED增删改数据源
-			ConfigChange configChange = changeEvent.getChange(key);
-			String values = configChange.getNewValue();
-			if(configChange.getChangeType().equals(PropertyChangeType.ADDED) || configChange.getChangeType().equals(PropertyChangeType.MODIFIED)){
-				//新增和删除都往map中做put操作
-				dataSourceHashtable.put(key, dataSource(values));
-			}
-			if (configChange.getChangeType().equals(PropertyChangeType.DELETED)){
-				//删除数据源并关闭数据连接池
-				HikariDataSource hikariDataSource = (HikariDataSource) dataSourceHashtable.get(key);
-				if(!hikariDataSource.isClosed()){
-					//关闭连接池 可能连接池还有用户在使用 所以需要异步尝试关闭保证数据的正确性
-					if(hikariDataSource.getHikariPoolMXBean() != null){
-						log.warn("当前数据源之前在使用中 需要尝试关闭");
-						asyncTerminate(hikariDataSource);
-					}else {
-						log.warn("当前数据源并未使用 无需尝试关闭");
-					}
+			//如果包含db是数据库操作
+			if (key.contains("db")) {
+				//获取所有数据库配置的属性 根据配置的变化状态ADDED MODIFIED DELETED增删改数据源
+				ConfigChange configChange = changeEvent.getChange(key);
+				String values = configChange.getNewValue();
+				if (configChange.getChangeType().equals(PropertyChangeType.ADDED) || configChange.getChangeType().equals(PropertyChangeType.MODIFIED)) {
+					//新增和删除都往map中做put操作
+					dataSourceHashtable.put(key, dataSource(values));
 				}
-				dataSourceHashtable.remove(key);
+				if (configChange.getChangeType().equals(PropertyChangeType.DELETED)) {
+					//删除数据源并关闭数据连接池
+					HikariDataSource hikariDataSource = (HikariDataSource) dataSourceHashtable.get(key);
+					if (!hikariDataSource.isClosed()) {
+						//关闭连接池 可能连接池还有用户在使用 所以需要异步尝试关闭保证数据的正确性
+						if (hikariDataSource.getHikariPoolMXBean() != null) {
+							log.warn("当前数据源之前在使用中 需要尝试关闭");
+							asyncTerminate(hikariDataSource);
+						} else {
+							log.warn("当前数据源并未使用 无需尝试关闭");
+						}
+					}
+					dataSourceHashtable.remove(key);
+				}
+			}else if (key.equals("useDataSources")){
+				//选择数据库的key变化
+				DynamicDataSourceContextHolder.setDataSourceKey(useDataSources);
+				log.info("配置中心的动态切换的数据库为：{}" ,changeEvent.getChange(key).getNewValue());
+			}else {
+				log.info("key：{}有变化 变化的数据：{} enjoy it;" ,key , JSONObject.toJSONString(changeEvent.getChange(key)));
 			}
 		});
 		source.setTargetDataSources(dataSourceHashtable);
@@ -145,7 +154,9 @@ public class DataSourceConfiguration {
 		protected Object determineCurrentLookupKey() {
 			String dataSourceKey = DynamicDataSourceContextHolder.getDataSourceKey();
 			if (dataSourceKey == null) {
-				return useDataSources;
+				//初始化的时候值为空
+				dataSourceKey = useDataSources;
+				DynamicDataSourceContextHolder.setDataSourceKey(useDataSources);
 			}
 			return dataSourceKey;
 		}

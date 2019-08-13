@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.example.apollodynamicdatasource.mapper")
 @EnableTransactionManagement
 public class ApolloDynamicDatasourceApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(ApolloDynamicDatasourceApplication.class, args);
     }

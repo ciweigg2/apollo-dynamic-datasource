@@ -22,7 +22,7 @@ public class DynamicDataSourceContextHolder {
 	 * @return
 	 */
 	public static String getDataSourceKey() {
-		return contextHolder.get() == null ? "new-db" : contextHolder.get();
+		return contextHolder.get();
 	}
 
 	/**

@@ -68,11 +68,12 @@ public class MultiDataSourceTransaction implements Transaction {
 
 	}
 
-
 	private void openMainConnection() throws SQLException {
 		this.mainConnection = DataSourceUtils.getConnection(this.dataSource);
 		this.autoCommit = this.mainConnection.getAutoCommit();
+		//判断是否是声明式事务 service @Transactional注解后 都是声明式事务
 //		this.isConnectionTransactional = DataSourceUtils.isConnectionTransactional(this.mainConnection, this.dataSource);
+		//因为必须使用@Transactional开启事务 所以这边改造一下 设置默认值false
 		this.isConnectionTransactional = false;
 
 		if (LOGGER.isDebugEnabled()) {
