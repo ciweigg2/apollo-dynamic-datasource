@@ -1,5 +1,7 @@
 package com.example.apollodynamicdatasource.controller;
 
+import com.ctrip.framework.apollo.spring.annotation.ApolloJsonValue;
+import com.example.apollodynamicdatasource.dynamicDataSource.properties.DynamicDataSourceProperties;
 import com.example.apollodynamicdatasource.entity.User;
 import com.example.apollodynamicdatasource.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class TestController {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@ApolloJsonValue("${new-db}")
+	private DynamicDataSourceProperties dynamicDataSourceProperties;
 
 	@RequestMapping(value = "test")
 	public String test() throws Exception {

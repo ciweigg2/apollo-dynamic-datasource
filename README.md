@@ -29,6 +29,15 @@ key:default-db
 value:{ "url":"jdbc:mysql://127.0.0.1:3309/test2?autoReconnect=true&useUnicode=true&characterEncoding=utf-8", "username":"root", "password":"123456", "maximumPoolSize":"10" }
 ```
 
+@ApolloConfig
+用来自动注入Config对象
+
+@ApolloConfigChangeListener
+用来自动注册ConfigChangeListener
+
+@ApolloJsonValue
+用来把配置的json字符串自动注入为对象
+
 ### 事务问题
 
 @Transactional注解后事务问题
