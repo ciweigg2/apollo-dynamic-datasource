@@ -38,8 +38,17 @@ public class DataSourceConfiguration {
 
 	private Hashtable<Object, Object> dataSourceHashtable = new Hashtable<>();
 
+	/**
+	 * 默认注入application
+	 */
 	@ApolloConfig
 	private Config config;
+
+	/**
+	 * 注入namespace configuration2 的配置
+	 */
+//	@ApolloConfig(value = "configuration2")
+//	private Config configuration2;
 
 	@Value("${useDataSources}")
 	private String useDataSources;
@@ -69,7 +78,7 @@ public class DataSourceConfiguration {
 	}
 
 	/**
-	 * 监听配置变化
+	 * 监听配置变化 默认只监听application 需要的话配置
 	 *
 	 * @param changeEvent
 	 */

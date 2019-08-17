@@ -1,5 +1,8 @@
 package com.example.apollodynamicdatasource.controller;
 
+import com.ctrip.framework.apollo.ConfigFile;
+import com.ctrip.framework.apollo.ConfigService;
+import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import com.ctrip.framework.apollo.spring.annotation.ApolloJsonValue;
 import com.example.apollodynamicdatasource.dynamicDataSource.properties.DynamicDataSourceProperties;
 import com.example.apollodynamicdatasource.entity.User;
@@ -24,6 +27,9 @@ public class TestController {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	/**
+	 * @ApolloJsonValue 这个注解会自动刷新bean 不需要手动去刷新了
+	 */
 	@ApolloJsonValue("${new-db}")
 	private DynamicDataSourceProperties dynamicDataSourceProperties;
 
@@ -34,6 +40,19 @@ public class TestController {
 		user.setName("事务测试呀");
 		userService.insertUsers(user);
 		return "enjoy it;";
+	}
+
+	/**
+	 * 获取json配置
+	 *
+	 * @return json配置
+	 */
+	@RequestMapping(value = "test2")
+	public String test2() {
+		String someNamespace = "configuration2";
+		ConfigFile configFile = ConfigService.getConfigFile(someNamespace, ConfigFileFormat.JSON);
+		String content = configFile.getContent();
+		return content;
 	}
 
 }
