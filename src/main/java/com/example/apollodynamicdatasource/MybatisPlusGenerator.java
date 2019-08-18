@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
-;
-
 public class MybatisPlusGenerator {
 
 	/**
