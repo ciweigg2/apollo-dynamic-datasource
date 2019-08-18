@@ -1,4 +1,4 @@
-package com.example.apollodynamicdatasource.entity.configuration;
+package com.example.apollodynamicdatasource.user.model.configuration;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

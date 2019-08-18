@@ -1,6 +1,6 @@
 package com.example.apollodynamicdatasource.dynamicDataSource.transaction;
 
-import com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.example.apollodynamicdatasource.dynamicDataSource.DataSourceConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -34,10 +34,10 @@ public class CiweiSqlSessionFactory {
             sessionFactoryBean.setDataSource(dataSource);
             sessionFactoryBean.setTransactionFactory(new MultiDataSourceTransactionFactory());
             // 读取配置
-            sessionFactoryBean.setTypeAliasesPackage("com.example.apollodynamicdatasource.entity");
+            sessionFactoryBean.setTypeAliasesPackage("com.example.apollodynamicdatasource.*.model");
 
             //设置mapper.xml文件所在位置
-            Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath*:/mapper/*.xml");
+            Resource[] resources = new PathMatchingResourcePatternResolver().getResources("classpath*:/mapper/*/*.xml");
             sessionFactoryBean.setMapperLocations(resources);
             return sessionFactoryBean.getObject();
         } catch (IOException e) {

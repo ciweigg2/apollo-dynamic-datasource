@@ -5,8 +5,8 @@ import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import com.ctrip.framework.apollo.spring.annotation.ApolloJsonValue;
 import com.example.apollodynamicdatasource.dynamicDataSource.properties.DynamicDataSourceProperties;
-import com.example.apollodynamicdatasource.entity.User;
-import com.example.apollodynamicdatasource.service.IUserService;
+import com.example.apollodynamicdatasource.user.model.UserModel;
+import com.example.apollodynamicdatasource.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +35,7 @@ public class TestController {
 
 	@RequestMapping(value = "test")
 	public String test() throws Exception {
-		User user = new User();
+		UserModel user = new UserModel();
 		user.setId(123456);
 		user.setName("事务测试呀");
 		userService.insertUsers(user);
@@ -53,6 +53,17 @@ public class TestController {
 		ConfigFile configFile = ConfigService.getConfigFile(someNamespace, ConfigFileFormat.JSON);
 		String content = configFile.getContent();
 		return content;
+	}
+
+	/**
+	 * 获取json配置
+	 *
+	 * @return json配置
+	 */
+	@RequestMapping(value = "test3")
+	public void test3() {
+		UserModel userModel = new UserModel().setId(3213123).setName("222");
+		userService.saves(userModel);
 	}
 
 }

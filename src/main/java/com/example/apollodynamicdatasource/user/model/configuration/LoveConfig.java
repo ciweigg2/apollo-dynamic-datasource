@@ -1,4 +1,4 @@
-package com.example.apollodynamicdatasource.entity.configuration;
+package com.example.apollodynamicdatasource.user.model.configuration;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ctrip.framework.apollo.model.ConfigChangeEvent;

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableApolloConfig
 @SpringBootApplication
-@MapperScan("com.example.apollodynamicdatasource.mapper")
+@MapperScan("com.example.apollodynamicdatasource.*.mapper")
 @EnableTransactionManagement
 public class ApolloDynamicDatasourceApplication {
 
