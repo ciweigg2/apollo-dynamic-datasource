@@ -51,7 +51,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -65,7 +65,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.ApolloDynamicDatasourceApplication">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -95,6 +95,13 @@
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ApolloDynamicDatasourceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="apollo-dynamic-datasource" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.apollodynamicdatasource.ApolloDynamicDatasourceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -129,7 +136,7 @@
       <workItem from="1566623867663" duration="109000" />
       <workItem from="1566624016202" duration="95000" />
       <workItem from="1566624823929" duration="1088000" />
-      <workItem from="1566625931241" duration="413000" />
+      <workItem from="1566625931241" duration="905000" />
     </task>
     <servers />
   </component>
