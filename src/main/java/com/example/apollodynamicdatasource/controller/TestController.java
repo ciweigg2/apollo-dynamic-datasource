@@ -64,7 +64,6 @@ public class TestController {
 	public void test3() {
 		UserModel userModel = new UserModel().setId(3213123).setName("222");
 		userService.saves(userModel);
-		System.out.println("测试分支呀");
 	}
 
 }
