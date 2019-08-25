@@ -4,6 +4,7 @@ import com.ctrip.framework.apollo.ConfigFile;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.core.enums.ConfigFileFormat;
 import com.ctrip.framework.apollo.spring.annotation.ApolloJsonValue;
+import com.example.apollodynamicdatasource.ResponseMessage;
 import com.example.apollodynamicdatasource.dynamicDataSource.properties.DynamicDataSourceProperties;
 import com.example.apollodynamicdatasource.user.model.UserModel;
 import com.example.apollodynamicdatasource.user.service.IUserService;
@@ -48,11 +49,11 @@ public class TestController {
 	 * @return json配置
 	 */
 	@RequestMapping(value = "test2")
-	public String test2() {
+	public ResponseMessage test2() {
 		String someNamespace = "configuration2";
 		ConfigFile configFile = ConfigService.getConfigFile(someNamespace, ConfigFileFormat.JSON);
 		String content = configFile.getContent();
-		return content;
+		return ResponseMessage.success(content);
 	}
 
 	/**
